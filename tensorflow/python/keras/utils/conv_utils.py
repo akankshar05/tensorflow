@@ -101,9 +101,9 @@ def conv_output_length(input_length, filter_size, padding, stride, dilation=1):
   """
   if input_length is None:
     return None
-  assert padding in {'same', 'valid', 'full', 'causal'}
+  assert padding in {"SAME", 'valid', 'full', 'causal'}
   dilated_filter_size = filter_size + (filter_size - 1) * (dilation - 1)
-  if padding in ['same', 'causal']:
+  if padding in ["SAME", 'causal']:
     output_length = input_length
   elif padding == 'valid':
     output_length = input_length - dilated_filter_size + 1
@@ -126,8 +126,8 @@ def conv_input_length(output_length, filter_size, padding, stride):
   """
   if output_length is None:
     return None
-  assert padding in {'same', 'valid', 'full'}
-  if padding == 'same':
+  assert padding in {"SAME", 'valid', 'full'}
+  if padding == "SAME":
     pad = filter_size // 2
   elif padding == 'valid':
     pad = 0
@@ -156,7 +156,7 @@ def deconv_output_length(input_length,
   Returns:
       The output length (integer).
   """
-  assert padding in {'same', 'valid', 'full'}
+  assert padding in {"SAME", 'valid', 'full'}
   if input_length is None:
     return None
 
@@ -169,11 +169,11 @@ def deconv_output_length(input_length,
       length = input_length * stride + max(filter_size - stride, 0)
     elif padding == 'full':
       length = input_length * stride - (stride + filter_size - 2)
-    elif padding == 'same':
+    elif padding == "SAME":
       length = input_length * stride
 
   else:
-    if padding == 'same':
+    if padding == "SAME":
       pad = filter_size // 2
     elif padding == 'valid':
       pad = 0
@@ -200,7 +200,7 @@ def normalize_padding(value):
   if isinstance(value, (list, tuple)):
     return value
   padding = value.lower()
-  if padding not in {'valid', 'same', 'causal'}:
+  if padding not in {'valid', "SAME", 'causal'}:
     raise ValueError('The `padding` argument must be a list/tuple or one of '
                      '"valid", "same" (or "causal", only for `Conv1D). '
                      'Received: ' + str(padding))
@@ -253,7 +253,7 @@ def conv_kernel_mask(input_shape, kernel_shape, strides, padding):
         same number of dimensions.
     NotImplementedError: if `padding` is not in {`"same"`, `"valid"`}.
   """
-  if padding not in {'same', 'valid'}:
+  if padding not in {"SAME", 'valid'}:
     raise NotImplementedError('Padding type %s not supported. '
                               'Only "valid" and "same" '
                               'are implemented.' % padding)
@@ -335,7 +335,7 @@ def conv_kernel_idxs(input_shape, kernel_shape, strides, padding, filters_in,
 
       NotImplementedError: if `padding` is neither `"same"` nor `"valid"`.
   """
-  if padding not in ('same', 'valid'):
+  if padding not in ("SAME", 'valid'):
     raise NotImplementedError('Padding type %s not supported. '
                               'Only "valid" and "same" '
                               'are implemented.' % padding)
